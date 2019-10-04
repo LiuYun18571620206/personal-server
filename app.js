@@ -9,6 +9,7 @@ var HomeRouter = require('./routes/Home');
 var GameRouter = require('./routes/Game');
 var CaseRouter = require('./routes/Case');
 var ToolRouter = require('./routes/Tool');
+var UserRouter = require('./routes/User');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/', HomeRouter);        //在app中注册routes该接口
 app.use('/Game', GameRouter);     //在app中注册users接口
 app.use('/Case', CaseRouter);
 app.use('/Tool', ToolRouter);
+app.use('/User', UserRouter);
 
 // 捕获404并转发到错误处理程序
 app.use(function(req, res, next) {
