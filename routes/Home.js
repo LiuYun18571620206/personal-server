@@ -1,61 +1,34 @@
 var express = require('express');
 var router = express.Router();
-var model=require('../contact')
+var {contact,link}=require('../contact')
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('Home');
+  let agent=req.headers['user-agent']
+  let tpl=/Android|webOS|iPhone|iPod|BlackBerry/i.test(agent)? 'phone' : 'Home';
+  res.render(tpl);
 });
-router.get('/Home/case',function(req,res,next){
-  //发送页面列表
-  res.send([
-    {
-      title:'网易云音乐模仿',
-      time:'2019.07.22',
-      text:'实现购物功能的DEMO',
-      img:'./images/wangyi.png',
-      url:'http://101.37.76.33/case/wangyi'
-    },{
-      title:'wegame首页模仿',
-      time:'2019.08.20',
-      text:'实现数据可视化功能',
-      img:'./images/wegame.png',
-      url:'http://101.37.76.33/case/wegame'
+router.get('/link',function(req,res,next){
+  let type=req.query.type
+  if(Array.isArray(type)){
+  type=type.map((v)=>{return {type:v}})
+  link.find({'$or':type},(error,person)=>{
+    if(error){
+      console.error('未找到')
+      return
     }
-  ])
-})
-router.get('/Home/tool',function(req,res,next){
-  //发送功能页列表
-  res.send([
-    {
-      title:'购物逻辑',
-      time:'2019.09.28',
-      text:'实现购物功能的DEMO',
-      img:'./images/mall.png',
-      url:'http://101.37.76.33/tool/mall'
-    },{
-      title:'数据可视化',
-      time:'2019.09.11',
-      text:'实现数据可视化功能',
-      img:'./images/visualization.png',
-      url:'http://101.37.76.33/tool/visualization'
-    }
-  ])
-})
-router.get('/Home/game',function(req,res,next){
-  //发送游戏列表
-  res.send([
-    {
-      title:'飞翔的小鸟',
-      time:'2019.07.26',
-      text:'飞翔的小鸟小游戏:',
-      img:'./images/flybird.png',
-      url:'http://101.37.76.33/Game/flybird'
-    }
-  ])
+    res.send(person)
+  })
+  }else{
+    link.find({type},(error,person)=>{
+      if(error){console.error('未找到');return}
+      res.send(person)
+    })
+  }
+  
 })
 router.get('/contact',function(req,res,next){
     //发送评论列表
-    model.find(function(err,person){
+    contact.find(function(err,person){
       if(err){
         console.log('没有获取到')
         return
@@ -66,14 +39,7 @@ router.get('/contact',function(req,res,next){
   router.post('/contact',function(req,res){
     //提交评论
     let obj={...req.body.params}
-    model.insertMany(obj)
+    contact.insertMany(obj)
     res.send('ok')
 })
-  router.get('/Note/NoteList',function(req,res){
-    //发送文章列表
-    res.send(
-      [
-      ]
-    )
-  })
 module.exports = router;
