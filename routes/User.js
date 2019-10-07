@@ -28,7 +28,6 @@ var {user}=require('../contact')
   router.post('/login',function(req,res,next){
     let {userName,password}=req.body.params
     user.find({userName,password},function(error,person){
-      console.log(person[0].id)
       if(person){
         res.send({id:person[0].id})
       }else{

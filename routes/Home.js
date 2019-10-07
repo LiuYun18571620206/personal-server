@@ -16,6 +16,7 @@ router.get('/link',function(req,res,next){
       console.error('未找到')
       return
     }
+    console.log(person)
     res.send(person)
   })
   }else{
